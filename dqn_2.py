@@ -1,4 +1,7 @@
 # trying basic DQN
+# much of this comes from Lawrence Li's DQN as well as the jiromiru(?) thing 
+# uses keras
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
