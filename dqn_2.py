@@ -32,7 +32,7 @@ class Agent():
         self.done = True
         self.m_steps = 0
         self.phi = np.zeros([1, 84, 84, 4]) # processed inputs 
-        self.gamma = 0.99
+        self.gamma = 0.90
 
         # epsilon things
         self.max_epsilon = 1
@@ -49,7 +49,7 @@ class Agent():
         model.add(Conv2D(filters=16, kernel_size=[8,8], strides=4, padding='same', activation='relu', input_shape=(84, 84, 1)))
         model.add(Conv2D(filters=32, kernel_size=[4,4], strides=2, padding = 'same', activation='relu'))
         model.add(Dense(self.actionCnt, activation='linear'))
-        opt = RMSprop(lr=0.00025)
+        opt = RMSprop(lr=0.02000)
         model.compile(loss='mse', optimizer = opt)
 
         self.model = model
@@ -164,7 +164,8 @@ class Agent():
         if np.random.rand() <= self.eps:
             action = random.randint(0,self.actionCnt-1)
         else:
-            action = np.argmax(self.model.predict(self.phi)[0,0,0,:])
+            maxes = np.asarray([np.amax(self.model.predict(self.phi)[0,0,0,i]) for i in range(0,6)])
+            action = np.argmax(maxes)
 
         for ii in range(self.k):
             obs , r, self.done, info = self.env.step(action)
